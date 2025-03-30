@@ -53,6 +53,12 @@ jobs:
           # Fix back to dashboard button
           sed -i "s|window.location.href = '/'|window.location.href = '/${REPO_NAME}/'|g" ./static/apiinfo.html
 
+      - name: Update version and branch in index.html
+        run: |
+          VERSION=$(git describe --tags --abbrev=0 || echo "v4.X")
+          BRANCH="PreviewServer"
+          sed -i "s|<h1>Stationeers Server UI v{{.Version}} ({{.Branch}})</h1>|<h1>Stationeers Server UI ${VERSION} (${BRANCH})</h1>|g" index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

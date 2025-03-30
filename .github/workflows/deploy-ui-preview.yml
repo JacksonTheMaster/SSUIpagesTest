@@ -1,0 +1,40 @@
+name: Deploy UI Preview to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up static folder
+        run: |
+          mkdir -p static
+          cp UIMod/config.html static/
+          cp UIMod/apiinfo.html static/
+          cp UIMod/style.css static/
+          echo "function navigateTo(url) { console.log('Nav to ' + url); }" > static/script.js
+
+      - name: Modify index.html
+        run: |
+          sed -i "s|navigateTo('/config')|navigateTo('/static/config.html')|g" UIMod/index.html
+          cp UIMod/index.html .
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

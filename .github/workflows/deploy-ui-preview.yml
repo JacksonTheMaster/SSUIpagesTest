@@ -41,11 +41,17 @@ jobs:
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
           sed -i "s|/static/|/${REPO_NAME}/static/|g" ./static/config.html
+          # Fix back buttons
+          sed -i "s|window.location.href = '/'|window.location.href = '/${REPO_NAME}/'|g" ./static/config.html
+          # Fix save buttons to redirect instead of submit
+          sed -i "s|document.getElementById('server-config-form').submit()|window.location.href = '/${REPO_NAME}/'|g" ./static/config.html
 
       - name: Modify apiinfo.html
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
           sed -i "s|/static/|/${REPO_NAME}/static/|g" ./static/apiinfo.html
+          # Fix back to dashboard button
+          sed -i "s|window.location.href = '/'|window.location.href = '/${REPO_NAME}/'|g" ./static/apiinfo.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

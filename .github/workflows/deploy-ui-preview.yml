@@ -41,7 +41,7 @@ jobs:
               createPlanet(planetContainer, 30, 1250, 63, 'rgba(50, 150, 250, 0.6)');
               createPlanet(planetContainer, 70, 400, 28, 'rgba(200, 150, 200, 0.7)'); 
           });
-
+                  
           // Mock data for preview
           const MOCK = {
               detectionEvents: [
@@ -85,13 +85,13 @@ jobs:
                   "Ready"
               ]
           };
-
+                  
           // Utility function for typing text
           function typeText(element, speed) {
               const fullText = element.textContent;
               element.textContent = '';
               let i = 0;
-
+                  
               const typeChar = () => {
                   if (i < fullText.length) {
                       element.textContent += fullText.charAt(i++);
@@ -100,12 +100,12 @@ jobs:
               };
               typeChar();
           }
-
+                
           // Utility function for typing text with a callback
           function typeTextWithCallback(element, text, speed, callback) {
               element.textContent = '';
               let i = 0;
-
+                
               const typeChar = () => {
                   if (i < text.length) {
                       element.textContent += text.charAt(i++);
@@ -116,90 +116,90 @@ jobs:
               };
               typeChar();
           }
-
+                
           // Tab management
           function setupTabs() {
               showTab('console-tab');
           }
-
+                
           function showTab(tabId) {
               document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
               document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
               const tab = document.getElementById(tabId);
               tab.classList.add('active');
-              document.querySelector(`.tab-button[onclick*="showTab('${tabId}')"]`).classList.add('active');
+              document.querySelector('.tab-button[onclick*="showTab(\'' + tabId + '\')"]').classList.add('active');
           }
-
+                
           // Mocked server control functions
           function startServer() {
               mockToggleServer('start');
           }
-
+                
           function stopServer() {
               mockToggleServer('stop');
           }
-
+                
           function mockToggleServer(action) {
               const status = document.getElementById('status');
               const messages = {
                   start: "Server started. Tthis is a preview - no actual server is running. But try to set this tool up yourself - it's easy! 😉",
                   stop: "Server stopped. This is a preview - no actual server was running. Have you tried to set this tool up yourself yet? Come on, you even hit this button! 😉"
               };
-
+                
               status.hidden = false;
               typeTextWithCallback(status, messages[action], 20, () => {
                   setTimeout(() => status.hidden = true, 20000);
               });
           }
-
+                
           function navigateTo(url) {
               window.location.href = url;
           }
-
+                
           // Mock detection events
           function mockDetectionEvents() {
               const detectionConsole = document.getElementById('detection-console');
-
+                
               // Initial population
               addInitialEvents();
-
+                
               // Then add new events periodically
               setInterval(() => {
                   const randomEvent = MOCK.detectionEvents[Math.floor(Math.random() * MOCK.detectionEvents.length)];
                   addDetectionEvent(randomEvent);
               }, 5000);
-
+                
               function addInitialEvents() {
                   // Add a subset of events initially
                   const initialEvents = [
                       "Preview mode active, simulating console output",
                   ];
-
+                  
                   initialEvents.forEach(eventText => {
                       addDetectionEvent(eventText);
                   });
               }
-
+              
               function addDetectionEvent(eventText) {
                   const message = document.createElement('div');
-                  message.className = `detection-event ${getEventClassName(eventText)}`;
-
+                  message.className = 'detection-event ${getEventClassName(eventText)}';
+                  
                   const timestamp = document.createElement('span');
                   timestamp.className = 'event-timestamp';
-                  timestamp.textContent = `${new Date().toLocaleTimeString()}: `;
-
+                  timestamp.textContent = '${new Date().toLocaleTimeString()}: ';
+                  
                   const content = document.createElement('span');
                   content.textContent = eventText;
-
+                  
                   message.append(timestamp, content);
                   detectionConsole.appendChild(message);
-
+                  
                   const maxMessages = 500;
                   while (detectionConsole.childElementCount > maxMessages) {
                       detectionConsole.firstChild.remove();
                   }
                   detectionConsole.scrollTop = detectionConsole.scrollHeight;
-
+                  
                   const detectionTab = document.getElementById('detection-tab');
                   if (!detectionTab.classList.contains('active')) {
                       const tabButton = document.querySelector('.tab-button[onclick*="detection-tab"]');
@@ -208,7 +208,7 @@ jobs:
                   }
               }
           }
-
+            
           function getEventClassName(eventText) {
               const checks = [
                   ['Server is ready', 'event-server-ready'],
@@ -220,39 +220,39 @@ jobs:
                   ['World Saved', 'event-world-saved'],
                   ['Exception', 'event-exception']
               ];
-
+              
               return checks.find(([text, condition]) => 
                   condition ? eventText.includes(text) && eventText.includes(condition) : eventText.includes(text)
               )?.[1] || '';
           }
-
+            
           // Mock backups functionality
           function mockBackups() {
               const backupList = document.getElementById('backupList');
               backupList.innerHTML = '';
-
+              
               MOCK.backups.forEach(backup => {
                   const li = document.createElement('li');
                   li.className = 'backup-item';
-                  li.innerHTML = `${backup} <button onclick="restoreBackup(${extractIndex(backup)})">Restore</button>`;
+                  li.innerHTML = '${backup} <button onclick="restoreBackup(${extractIndex(backup)})">Restore</button>';
                   backupList.appendChild(li);
               });
           }
-
+            
           function extractIndex(backupText) {
               return backupText.match(/Index: (\d+)/)?.[1] || null;
           }
-
+            
           function restoreBackup(index) {
               const status = document.getElementById('status');
-              const message = `Restored backup with index ${index}. (This is a preview - no actual restoration occurred)`;
-
+              const message = 'Restored backup with index ${index}. (This is a preview - no actual restoration occurred)';
+              
               status.hidden = false;
               typeTextWithCallback(status, message, 20, () => {
                   setTimeout(() => status.hidden = true, 30000);
               });
           }
-
+            
           // Mock console with simulated output
           function mockConsole() {
               const consoleElement = document.getElementById('console');
@@ -261,7 +261,7 @@ jobs:
               const bootCompleteMessage = "Interface ready.🎮 Happy gaming! 🎮";
               const bugChance = Math.random();
               const bugMessage = "ERROR: Nuclear parts in airflow detected! Initiating repair sequence...";
-
+              
               const funMessages = [
                   "Calibrating quantum flux capacitors...",
                   "Initializing player happiness modules...",
@@ -301,7 +301,7 @@ jobs:
                   "Assembling solar tracker... now it's tracking the admin instead.",
                   "Balancing gas mixtures... kaboom imminent, run you fool!"
               ];
-
+            
               const addMessage = (text, color, style = 'normal') => {
                   const div = document.createElement('div');
                   div.textContent = text;
@@ -310,19 +310,19 @@ jobs:
                   consoleElement.appendChild(div);
                   consoleElement.scrollTop = consoleElement.scrollHeight;
               };
-
+            
               // Start with initializing message
               typeTextWithCallback(consoleElement, bootTitle, 30, () => {
                   // Show two funny messages while connecting
                   const messageIndex1 = Math.floor(Math.random() * funMessages.length);
                   addMessage(funMessages[messageIndex1], '#0af', 'italic');
-
+            
                   let messageIndex2;
                   do {
                       messageIndex2 = Math.floor(Math.random() * funMessages.length);
                   } while (messageIndex2 === messageIndex1);
                   addMessage(funMessages[messageIndex2], '#0af', 'italic');
-
+            
                   // Simulate connection to server
                   setTimeout(() => {
                       // Add bug message occasionally
@@ -349,7 +349,7 @@ jobs:
                       if (messageIndex < MOCK.consoleMessages.length) {
                           addMessage(MOCK.consoleMessages[messageIndex], '#fff');
                           messageIndex++;
-
+                          
                           const delay = 2000 + Math.random() * 3000; // Random delay between 2-5 seconds
                           setTimeout(addNextMessage, delay);
                       } else {
@@ -361,37 +361,37 @@ jobs:
                           }, 3000);
                       }
                   }
-
+                  
                   // Start showing console messages after a delay
                   setTimeout(addNextMessage, 1500);
               }
           }
-
+            
           function createPlanet(container, size, orbitRadius, speed, color) {
               const orbit = document.createElement('div');
               orbit.classList.add('orbit');
-              orbit.style.width = `${orbitRadius * 2}px`;
-              orbit.style.height = `${orbitRadius * 2}px`;
+              orbit.style.width = '${orbitRadius * 2}px';
+              orbit.style.height = '${orbitRadius * 2}px';
               orbit.style.position = 'absolute';
               orbit.style.left = '50%';
               orbit.style.top = '50%';
               orbit.style.transform = 'translate(-50%, -50%)';
-
+              
               // Add random delay to start animation at different points
               const randomDelay = -(Math.random() * speed); // Negative delay to offset start
-              orbit.style.animation = `orbit ${speed}s linear infinite ${randomDelay}s`;
-
+              orbit.style.animation = 'orbit ${speed}s linear infinite ${randomDelay}s';
+            
               const planet = document.createElement('div');
               planet.classList.add('planet');
-              planet.style.width = `${size}px`;
-              planet.style.height = `${size}px`;
+              planet.style.width = '${size}px';
+              planet.style.height = '${size}px';
               planet.style.position = 'absolute';
               planet.style.left = '0%';
               planet.style.top = '50%';
               planet.style.backgroundColor = color;
               planet.style.borderRadius = '50%';
-              planet.style.boxShadow = `0 0 20px ${color}`;
-
+              planet.style.boxShadow = '0 0 20px ${color}';
+              
               orbit.appendChild(planet);
               container.appendChild(orbit);
           }
